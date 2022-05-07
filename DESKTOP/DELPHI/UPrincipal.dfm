@@ -1,9 +1,9 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
-  ClientHeight = 299
-  ClientWidth = 635
+  Caption = 'Conex'#227'o com Firebird'
+  ClientHeight = 703
+  ClientWidth = 1079
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
