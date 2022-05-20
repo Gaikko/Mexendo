@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20-Maio-2022 às 17:06
+-- Tempo de geração: 20-Maio-2022 às 17:26
 -- Versão do servidor: 10.4.21-MariaDB
 -- versão do PHP: 8.0.12
 
@@ -70,6 +70,19 @@ INSERT INTO `categoria` (`id_categoria`, `fk_id_status`, `fk_id_unidade`, `cat_t
 (1, 1, 1, 'Produtos', NULL),
 (2, 1, 1, 'Serviços', NULL),
 (3, 1, 1, 'Eventos', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `estoque`
+--
+
+CREATE TABLE `estoque` (
+  `fk_id_item` int(11) NOT NULL,
+  `fk_cpf` varchar(11) NOT NULL,
+  `it_quantidade` int(11) NOT NULL,
+  `est_dt_cad` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -400,6 +413,13 @@ ALTER TABLE `categoria`
   ADD KEY `fk_id_unidade_cat` (`fk_id_unidade`);
 
 --
+-- Índices para tabela `estoque`
+--
+ALTER TABLE `estoque`
+  ADD PRIMARY KEY (`fk_id_item`),
+  ADD KEY `fk_cpf_estoque` (`fk_cpf`);
+
+--
 -- Índices para tabela `itens`
 --
 ALTER TABLE `itens`
@@ -469,6 +489,12 @@ ALTER TABLE `categoria`
   MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de tabela `estoque`
+--
+ALTER TABLE `estoque`
+  MODIFY `fk_id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de tabela `itens`
 --
 ALTER TABLE `itens`
@@ -515,6 +541,13 @@ ALTER TABLE `area`
 ALTER TABLE `categoria`
   ADD CONSTRAINT `fk_id_status_cat` FOREIGN KEY (`fk_id_status`) REFERENCES `status` (`id_status`),
   ADD CONSTRAINT `fk_id_unidade_cat` FOREIGN KEY (`fk_id_unidade`) REFERENCES `unidades` (`id_unidade`);
+
+--
+-- Limitadores para a tabela `estoque`
+--
+ALTER TABLE `estoque`
+  ADD CONSTRAINT `fk_cpf_estoque` FOREIGN KEY (`fk_cpf`) REFERENCES `usuario` (`cpf`),
+  ADD CONSTRAINT `fk_id_item_estoque` FOREIGN KEY (`fk_id_item`) REFERENCES `itens` (`id_item`);
 
 --
 -- Limitadores para a tabela `itens`
