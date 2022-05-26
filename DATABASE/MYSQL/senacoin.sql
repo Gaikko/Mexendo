@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20-Maio-2022 às 17:26
+-- Tempo de geração: 26-Maio-2022 às 17:38
 -- Versão do servidor: 10.4.21-MariaDB
 -- versão do PHP: 8.0.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `senacoin`
 --
-CREATE DATABASE IF NOT EXISTS `senacoin` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `senacoin`;
 
 -- --------------------------------------------------------
 
@@ -82,9 +80,17 @@ INSERT INTO `categoria` (`id_categoria`, `fk_id_status`, `fk_id_unidade`, `cat_t
 CREATE TABLE `estoque` (
   `fk_id_item` int(11) NOT NULL,
   `fk_cpf` varchar(11) NOT NULL,
-  `it_quantidade` int(11) NOT NULL,
+  `it_qtde` int(11) NOT NULL,
   `est_dt_cad` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `estoque`
+--
+
+INSERT INTO `estoque` (`fk_id_item`, `fk_cpf`, `it_qtde`, `est_dt_cad`) VALUES
+(1, '00000000002', 25, '2022-05-26'),
+(2, '00000000002', 7, '2022-05-26');
 
 -- --------------------------------------------------------
 
@@ -103,7 +109,6 @@ CREATE TABLE `itens` (
   `it_descricao` text NOT NULL,
   `it_pontos` float DEFAULT NULL,
   `it_imagem` blob DEFAULT NULL,
-  `fk_it_qtde` int(11) NOT NULL,
   `it_dt_inicio` datetime DEFAULT current_timestamp(),
   `it_dt_fim` datetime DEFAULT current_timestamp(),
   `it_observacao` text DEFAULT NULL
@@ -113,9 +118,34 @@ CREATE TABLE `itens` (
 -- Extraindo dados da tabela `itens`
 --
 
-INSERT INTO `itens` (`id_item`, `fk_id_area`, `fk_id_categoria`, `fk_id_subcat`, `fk_id_status`, `fk_id_unidade`, `it_titulo`, `it_descricao`, `it_pontos`, `it_imagem`, `fk_it_qtde`, `it_dt_inicio`, `it_dt_fim`, `it_observacao`) VALUES
-(1, 1, 1, 2, 1, 1, 'Camiseta Dia dos Namorados Salão de Beleza', '.', NULL, NULL, 1, '2022-05-20 11:05:43', '2022-05-20 11:05:43', NULL),
-(2, 3, 1, 1, 1, 1, 'Garrafa promocional Gastronomia', '.', NULL, NULL, 2, '2022-05-20 11:05:43', '2022-05-20 11:05:43', NULL);
+INSERT INTO `itens` (`id_item`, `fk_id_area`, `fk_id_categoria`, `fk_id_subcat`, `fk_id_status`, `fk_id_unidade`, `it_titulo`, `it_descricao`, `it_pontos`, `it_imagem`, `it_dt_inicio`, `it_dt_fim`, `it_observacao`) VALUES
+(1, 1, 1, 2, 1, 1, 'Camiseta Dia dos Namorados Salão de Beleza', '.', NULL, NULL, '2022-05-20 11:05:43', '2022-05-20 11:05:43', NULL),
+(2, 3, 1, 1, 1, 1, 'Garrafa promocional Gastronomia', '.', NULL, NULL, '2022-05-20 11:05:43', '2022-05-20 11:05:43', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `kardex`
+--
+
+CREATE TABLE `kardex` (
+  `id_kardex` int(11) NOT NULL,
+  `fk_id_item` int(11) NOT NULL,
+  `fk_cpf` varchar(11) NOT NULL,
+  `kar_dt_cad` date NOT NULL,
+  `kar_qtde_item` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `kardex`
+--
+
+INSERT INTO `kardex` (`id_kardex`, `fk_id_item`, `fk_cpf`, `kar_dt_cad`, `kar_qtde_item`) VALUES
+(1, 1, '00000000002', '2022-05-26', 1),
+(2, 2, '00000000002', '2022-05-26', 4),
+(3, 1, '00000000002', '2022-05-26', 23),
+(4, 2, '00000000002', '2022-05-26', 3),
+(5, 1, '00000000002', '2022-05-26', 1);
 
 -- --------------------------------------------------------
 
@@ -149,6 +179,77 @@ INSERT INTO `perfil` (`id_perfil`, `fk_id_status`, `fk_id_unidade`, `nome_perfil
 (1, 1, 1, 'Administrador', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 (2, 1, 1, 'Suporte', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 (3, 1, 1, 'Colaborador', 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `promocoes`
+--
+
+CREATE TABLE `promocoes` (
+  `id_promocao` int(11) NOT NULL,
+  `fk_id_item` int(11) NOT NULL,
+  `fk_id-unidade` int(11) NOT NULL,
+  `prom_titulo` varchar(50) NOT NULL,
+  `promo_descricao` varchar(50) NOT NULL,
+  `prom_pontos` float NOT NULL,
+  `prom_desc` float NOT NULL,
+  `prom_quantidade` int(11) NOT NULL,
+  `prom_imagem` blob NOT NULL,
+  `prom_dt_inicio` date NOT NULL,
+  `promo_dt_fim` date NOT NULL,
+  `promo_observacao` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `qr_code`
+--
+
+CREATE TABLE `qr_code` (
+  `id_qrcode` int(11) NOT NULL,
+  `fk_id_item` int(11) NOT NULL,
+  `fk_cpf` varchar(11) NOT NULL,
+  `fk_id_unidade` int(11) NOT NULL,
+  `qr_titulo` varchar(50) NOT NULL,
+  `qr_descricao` varchar(50) NOT NULL,
+  `qr_imagem` blob DEFAULT NULL,
+  `qr_link` varchar(250) NOT NULL,
+  `qr_img_link` blob NOT NULL,
+  `qr_dt_inicio` date NOT NULL,
+  `qr_dt_fim` date NOT NULL,
+  `fk_id_senacoin` int(11) NOT NULL,
+  `fk_id_status` int(11) NOT NULL,
+  `qr_observacao` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `qr_code`
+--
+
+INSERT INTO `qr_code` (`id_qrcode`, `fk_id_item`, `fk_cpf`, `fk_id_unidade`, `qr_titulo`, `qr_descricao`, `qr_imagem`, `qr_link`, `qr_img_link`, `qr_dt_inicio`, `qr_dt_fim`, `fk_id_senacoin`, `fk_id_status`, `qr_observacao`) VALUES
+(1, 1, '00000000001', 1, 'Teste QR-Code', 'Testando QR-Code', NULL, '.', 0x74657374652071722d636f6465, '2022-05-26', '2022-05-31', 1, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `senacoin`
+--
+
+CREATE TABLE `senacoin` (
+  `id_senacoin` int(11) NOT NULL,
+  `sen_dt_inicio` date NOT NULL,
+  `sen_dt_fim` date NOT NULL,
+  `sen_pontos` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `senacoin`
+--
+
+INSERT INTO `senacoin` (`id_senacoin`, `sen_dt_inicio`, `sen_dt_fim`, `sen_pontos`) VALUES
+(1, '2022-05-26', '2022-05-26', 1);
 
 -- --------------------------------------------------------
 
@@ -278,6 +379,53 @@ CREATE TABLE `vw_categoria` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura stand-in para vista `vw_estoque_atual`
+-- (Veja abaixo para a view atual)
+--
+CREATE TABLE `vw_estoque_atual` (
+`Código` int(11)
+,`Titulo` varchar(50)
+,`Descrição` text
+,`Saldo` int(11)
+,`Data` date
+,`Usuário` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura stand-in para vista `vw_itens`
+-- (Veja abaixo para a view atual)
+--
+CREATE TABLE `vw_itens` (
+`Código` int(11)
+,`Título` varchar(50)
+,`Descrição` text
+,`Pontos` float
+,`Área` varchar(50)
+,`Categoria` varchar(50)
+,`Subcategoria` varchar(50)
+,`Unidade` varchar(50)
+,`Status` varchar(25)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura stand-in para vista `vw_kardex_posicao_atual_somada`
+-- (Veja abaixo para a view atual)
+--
+CREATE TABLE `vw_kardex_posicao_atual_somada` (
+`Código` int(11)
+,`Título` varchar(50)
+,`Descrição` text
+,`Saldo Atual` decimal(32,0)
+,`Usuário` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura stand-in para vista `vw_perfil`
 -- (Veja abaixo para a view atual)
 --
@@ -287,6 +435,25 @@ CREATE TABLE `vw_perfil` (
 ,`Administrador` tinyint(1)
 ,`Unidade` varchar(50)
 ,`Status` varchar(25)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura stand-in para vista `vw_qr_code`
+-- (Veja abaixo para a view atual)
+--
+CREATE TABLE `vw_qr_code` (
+`ID` int(11)
+,`Título` varchar(50)
+,`Descrição` varchar(50)
+,`Item Referência` varchar(50)
+,`Pontos` float
+,`Data Inicial` date
+,`Data Final` date
+,`Status` varchar(25)
+,`Nome` varchar(255)
+,`Unidade` varchar(50)
 );
 
 -- --------------------------------------------------------
@@ -359,11 +526,47 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Estrutura para vista `vw_estoque_atual`
+--
+DROP TABLE IF EXISTS `vw_estoque_atual`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_estoque_atual`  AS SELECT `e`.`fk_id_item` AS `Código`, `i`.`it_titulo` AS `Titulo`, `i`.`it_descricao` AS `Descrição`, `e`.`it_qtde` AS `Saldo`, `e`.`est_dt_cad` AS `Data`, `u`.`usu_nome` AS `Usuário` FROM ((`estoque` `e` join `itens` `i` on(`i`.`id_item` = `e`.`fk_id_item`)) join `usuario` `u` on(`u`.`cpf` = `e`.`fk_cpf`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para vista `vw_itens`
+--
+DROP TABLE IF EXISTS `vw_itens`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_itens`  AS SELECT `i`.`id_item` AS `Código`, `i`.`it_titulo` AS `Título`, `i`.`it_descricao` AS `Descrição`, `i`.`it_pontos` AS `Pontos`, `a`.`ar_titulo` AS `Área`, `c`.`cat_titulo` AS `Categoria`, `sb`.`sc_titulo` AS `Subcategoria`, `u`.`uni_descricao` AS `Unidade`, `st`.`st_nome` AS `Status` FROM (((((`itens` `i` join `subcategoria` `sb` on(`sb`.`id_subcat` = `i`.`fk_id_subcat`)) join `categoria` `c` on(`c`.`id_categoria` = `i`.`fk_id_categoria`)) join `area` `a` on(`a`.`id_area` = `i`.`fk_id_area`)) join `unidades` `u` on(`u`.`id_unidade` = `i`.`fk_id_unidade`)) join `status` `st` on(`st`.`id_status` = `i`.`fk_id_status`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para vista `vw_kardex_posicao_atual_somada`
+--
+DROP TABLE IF EXISTS `vw_kardex_posicao_atual_somada`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kardex_posicao_atual_somada`  AS SELECT `it`.`id_item` AS `Código`, `it`.`it_titulo` AS `Título`, `it`.`it_descricao` AS `Descrição`, sum(`k`.`kar_qtde_item`) AS `Saldo Atual`, `u`.`usu_nome` AS `Usuário` FROM ((`kardex` `k` join `itens` `it` on(`it`.`id_item` = `k`.`fk_id_item`)) join `usuario` `u` on(`u`.`cpf` = `k`.`fk_cpf`)) GROUP BY `k`.`fk_id_item` ;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para vista `vw_perfil`
 --
 DROP TABLE IF EXISTS `vw_perfil`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_perfil`  AS SELECT `p`.`id_perfil` AS `ID`, `p`.`nome_perfil` AS `Perfil`, `p`.`acesso_adm` AS `Administrador`, `u`.`uni_descricao` AS `Unidade`, `st`.`st_nome` AS `Status` FROM ((`perfil` `p` join `unidades` `u` on(`p`.`fk_id_unidade` = `u`.`id_unidade`)) join `status` `st` on(`p`.`fk_id_status` = `st`.`id_status`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para vista `vw_qr_code`
+--
+DROP TABLE IF EXISTS `vw_qr_code`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_qr_code`  AS SELECT `qr`.`id_qrcode` AS `ID`, `qr`.`qr_titulo` AS `Título`, `qr`.`qr_descricao` AS `Descrição`, `i`.`it_titulo` AS `Item Referência`, `sen`.`sen_pontos` AS `Pontos`, `qr`.`qr_dt_inicio` AS `Data Inicial`, `qr`.`qr_dt_fim` AS `Data Final`, `st`.`st_nome` AS `Status`, `u`.`usu_nome` AS `Nome`, `uni`.`uni_descricao` AS `Unidade` FROM (((((`qr_code` `qr` join `senacoin` `sen` on(`sen`.`id_senacoin` = `qr`.`fk_id_senacoin`)) join `itens` `i` on(`i`.`id_item` = `qr`.`fk_id_item`)) join `usuario` `u` on(`u`.`cpf` = `qr`.`fk_cpf`)) join `unidades` `uni` on(`uni`.`id_unidade` = `qr`.`fk_id_unidade`)) join `status` `st` on(`st`.`id_status` = `qr`.`fk_id_status`)) ;
 
 -- --------------------------------------------------------
 
@@ -433,6 +636,14 @@ ALTER TABLE `itens`
   ADD KEY `fk_id_unidade_item` (`fk_id_unidade`);
 
 --
+-- Índices para tabela `kardex`
+--
+ALTER TABLE `kardex`
+  ADD PRIMARY KEY (`id_kardex`),
+  ADD KEY `fk_id_item_kardex` (`fk_id_item`),
+  ADD KEY `fk_cpf_kardex` (`fk_cpf`);
+
+--
 -- Índices para tabela `perfil`
 --
 ALTER TABLE `perfil`
@@ -440,6 +651,29 @@ ALTER TABLE `perfil`
   ADD UNIQUE KEY `UQ_nome_perfil` (`nome_perfil`),
   ADD KEY `fk_id_status_perfil` (`fk_id_status`) USING BTREE,
   ADD KEY `fk_id_unidade_perfil` (`fk_id_unidade`) USING BTREE;
+
+--
+-- Índices para tabela `promocoes`
+--
+ALTER TABLE `promocoes`
+  ADD PRIMARY KEY (`id_promocao`);
+
+--
+-- Índices para tabela `qr_code`
+--
+ALTER TABLE `qr_code`
+  ADD PRIMARY KEY (`id_qrcode`),
+  ADD KEY `fk_id_status_qrcode` (`fk_id_status`),
+  ADD KEY `fk_id_unidade_qrcode` (`fk_id_unidade`),
+  ADD KEY `fk_id_item_qrcode` (`fk_id_item`),
+  ADD KEY `fk_cpf_qrcode` (`fk_cpf`),
+  ADD KEY `fk_id_senacoin_qrcode` (`fk_id_senacoin`);
+
+--
+-- Índices para tabela `senacoin`
+--
+ALTER TABLE `senacoin`
+  ADD PRIMARY KEY (`id_senacoin`);
 
 --
 -- Índices para tabela `status`
@@ -494,7 +728,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de tabela `estoque`
 --
 ALTER TABLE `estoque`
-  MODIFY `fk_id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `fk_id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `itens`
@@ -503,10 +737,28 @@ ALTER TABLE `itens`
   MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de tabela `kardex`
+--
+ALTER TABLE `kardex`
+  MODIFY `id_kardex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de tabela `perfil`
 --
 ALTER TABLE `perfil`
   MODIFY `id_perfil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de tabela `promocoes`
+--
+ALTER TABLE `promocoes`
+  MODIFY `id_promocao` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `qr_code`
+--
+ALTER TABLE `qr_code`
+  MODIFY `id_qrcode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `status`
@@ -562,11 +814,28 @@ ALTER TABLE `itens`
   ADD CONSTRAINT `fk_id_unidade_item` FOREIGN KEY (`fk_id_unidade`) REFERENCES `unidades` (`id_unidade`);
 
 --
+-- Limitadores para a tabela `kardex`
+--
+ALTER TABLE `kardex`
+  ADD CONSTRAINT `fk_cpf_kardex` FOREIGN KEY (`fk_cpf`) REFERENCES `usuario` (`cpf`),
+  ADD CONSTRAINT `fk_id_item_kardex` FOREIGN KEY (`fk_id_item`) REFERENCES `itens` (`id_item`);
+
+--
 -- Limitadores para a tabela `perfil`
 --
 ALTER TABLE `perfil`
   ADD CONSTRAINT `fk_id_perfil` FOREIGN KEY (`fk_id_status`) REFERENCES `status` (`id_status`),
   ADD CONSTRAINT `fk_id_unidade_perfil` FOREIGN KEY (`fk_id_unidade`) REFERENCES `unidades` (`id_unidade`);
+
+--
+-- Limitadores para a tabela `qr_code`
+--
+ALTER TABLE `qr_code`
+  ADD CONSTRAINT `fk_cpf_qrcode` FOREIGN KEY (`fk_cpf`) REFERENCES `usuario` (`cpf`),
+  ADD CONSTRAINT `fk_id_item_qrcode` FOREIGN KEY (`fk_id_item`) REFERENCES `itens` (`id_item`),
+  ADD CONSTRAINT `fk_id_senacoin_qrcode` FOREIGN KEY (`fk_id_senacoin`) REFERENCES `senacoin` (`id_senacoin`),
+  ADD CONSTRAINT `fk_id_status_qrcode` FOREIGN KEY (`fk_id_status`) REFERENCES `status` (`id_status`),
+  ADD CONSTRAINT `fk_id_unidade_qrcode` FOREIGN KEY (`fk_id_unidade`) REFERENCES `unidades` (`id_unidade`);
 
 --
 -- Limitadores para a tabela `subcategoria`
